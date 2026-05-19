@@ -13,6 +13,48 @@ Projeto TypeScript implementando Clean Architecture com casos de uso para as ent
 npm install
 ```
 
+## Notification Pattern — Entidade Product
+
+A entidade `Product` foi refatorada para utilizar o **Notification Pattern**: ao invés de lançar um `Error` imediatamente na primeira regra violada, todos os erros de validação são acumulados em um objeto `Notification` e lançados juntos como `NotificationError` ao final.
+
+**Exemplo de comportamento:**
+
+```typescript
+// Antes: só o primeiro erro era reportado
+new Product("123", "", -1); // throw Error("Name is required")
+
+// Depois: todos os erros são acumulados e lançados de uma vez
+new Product("123", "", -1);
+// throw NotificationError([
+//   { context: "product", message: "Name is required" },
+//   { context: "product", message: "Price must be greater than zero" },
+// ])
+```
+
+**Arquivos relacionados:**
+
+| Arquivo | Descrição |
+|---|---|
+| `src/domain/product/entity/product.ts` | Entidade refatorada — estende `Entity`, usa `notification` |
+| `src/domain/product/validator/product.validator.ts` | Valida e adiciona erros ao `notification` |
+| `src/domain/product/factory/product.validator.factory.ts` | Factory do validador |
+| `src/domain/@shared/notification/notification.ts` | Container acumulador de erros |
+| `src/domain/@shared/notification/notification.error.ts` | Erro lançado com todos os erros acumulados |
+
+### Rodando os testes do Notification Pattern
+
+```bash
+./node_modules/.bin/jest src/domain/product/entity/product.spec.ts
+```
+
+O teste obrigatório de múltiplos erros simultâneos está em `product.spec.ts`:
+
+```
+✓ should accumulate multiple validation errors simultaneously
+```
+
+Ele força `name` vazio e `price` negativo ao mesmo tempo e verifica que a `NotificationError` contém ambos os erros.
+
 ## Executando os Testes
 
 ### Todos os testes
