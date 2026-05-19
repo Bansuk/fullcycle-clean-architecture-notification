@@ -47,6 +47,69 @@ npm test
 ./node_modules/.bin/jest --testPathPattern="src/usecase/customer"
 ```
 
+## API
+
+### Executando a API
+
+```bash
+npm run dev
+```
+
+A API sobe por padrão na porta `3000` (configurável via variável de ambiente `PORT` no arquivo `.env`).
+
+### Endpoints disponíveis
+
+#### Customer
+
+| Método | Rota        | Descrição              |
+|--------|-------------|------------------------|
+| POST   | `/customer` | Cria um novo customer  |
+| GET    | `/customer` | Lista todos os customers |
+
+#### Product
+
+| Método | Rota       | Descrição             |
+|--------|------------|-----------------------|
+| GET    | `/product` | Lista todos os products |
+
+A rota `GET /product` suporta negociação de conteúdo:
+- `Accept: application/json` (padrão) — retorna JSON
+- `Accept: application/xml` — retorna XML
+
+**Exemplo de resposta JSON:**
+```json
+{
+  "products": [
+    { "id": "uuid", "name": "Product 1", "price": 10.0 }
+  ]
+}
+```
+
+**Exemplo de resposta XML:**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<products>
+  <product>
+    <id>uuid</id>
+    <name>Product 1</name>
+    <price>10</price>
+  </product>
+</products>
+```
+
+### Testes E2E
+
+```bash
+./node_modules/.bin/jest --testPathPattern="e2e.spec"
+```
+
+Os testes E2E simulam requisições HTTP reais contra a API usando **supertest** com banco SQLite em memória.
+
+| Arquivo de Teste                          | Cobertura                                         |
+|-------------------------------------------|---------------------------------------------------|
+| `customer.e2e.spec.ts`                    | POST `/customer`, GET `/customer` (JSON e XML)    |
+| `product.e2e.spec.ts`                     | GET `/product` (JSON, XML, lista vazia)           |
+
 ## Cobertura de Testes
 
 Cada caso de uso possui testes de **unidade** e de **integração**:
