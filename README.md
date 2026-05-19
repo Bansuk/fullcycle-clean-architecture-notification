@@ -37,7 +37,6 @@ new Product("123", "", -1);
 |---|---|
 | `src/domain/product/entity/product.ts` | Entidade refatorada — estende `Entity`, usa `notification` |
 | `src/domain/product/validator/product.validator.ts` | Valida e adiciona erros ao `notification` |
-| `src/domain/product/factory/product.validator.factory.ts` | Factory do validador |
 | `src/domain/@shared/notification/notification.ts` | Container acumulador de erros |
 | `src/domain/@shared/notification/notification.error.ts` | Erro lançado com todos os erros acumulados |
 
